@@ -1,0 +1,216 @@
+*{
+  box-sizing: border-box;
+  /* overflow: hidden; */
+}
+
+html, body, #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    height: 100vh; /* Force height to viewport height */
+    background-color: #f9fafb; /* Light gray background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Form Card Container (The white box - matches .form-card) */
+.form-page {
+    max-width: 650px; 
+    width: 90%; 
+    height: 100vh; /* Allow height to adapt */
+    max-height: 95vh;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f3f4f6;
+    overflow-y: auto; 
+}
+
+/* =================================
+ * HEADER & SEPARATOR STYLES
+ * ================================= */
+
+/* Header Container */
+.header {
+    text-align: center;
+    margin-bottom: 1.2rem;
+    line-height: 1;
+}
+
+/* SkillBridge Logo Image */
+.skillb {
+    margin-left: auto;
+    margin-right: auto;
+    height: 4rem; /* Increased from 2.5rem */
+    margin-bottom: 0rem;
+    margin-top: -1rem;
+    border-radius: 50%;
+    object-fit: contain; 
+}
+
+.header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.header p {
+    color: #4a4d52;
+    font-size: 0.9rem;
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+}
+
+/* Google Sign-in Button */
+.google-btn {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    gap: 0.5rem; 
+    /* margin-bottom: 0.5rem; */
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition-property: background-color;
+    transition-duration: 150ms;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+.google-btn:hover {
+    background-color: #f9fafb;
+}
+
+/* OR Separator Text (used on the unclassified <p>OR</p> element) */
+.or-text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0rem;
+    margin-top: 1.2rem;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.or-text::before,
+.or-text::after {
+    content: '';
+    flex-grow: 1;
+    border-top: 1px solid #d1d5db;
+}
+.or-text::before {
+    margin-right: 1rem;
+}
+.or-text::after {
+    margin-left: 1rem;
+}
+
+
+/* =================================
+ * FORM FIELDS STYLES
+ * ================================= */
+
+/* Form Field Grid Container */
+.form-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 2rem;
+    /* place-items: center; */
+    /* justify-items: center; */
+}
+
+/* Individual Form Group */
+.form-group p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    /* margin-bottom: 1rem; */
+    margin-left: 1rem;
+}
+
+/* Input Fields */
+.form-fields input {
+    width: 80%;
+    padding: 0.625rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 150ms;
+    color: #1f2937;
+    margin-left: 1rem;
+    background-color: #ffffff;
+}
+
+.form-fields input::placeholder {
+    color: #9ca3af;
+}
+
+
+/* =================================
+ * BUTTON & FOOTER STYLES
+ * ================================= */
+
+.createaccount {
+    width: 60%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    color: #ffffff;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    /* Gradient: bg-gradient-to-r from-purple-600 to-indigo-600 */
+    background-image: linear-gradient(to right, #7c3aed, #4f46e5); 
+    transition: all 200ms;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.createaccount:hover {
+    /* Hover Gradient */
+    background-image: linear-gradient(to right, #6d28d9, #4338ca);
+}
+.createaccount:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.5);
+}
+
+/* Footer Link Text (using .footer-text for the main <p>) */
+.footer-text {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-top: 1rem;
+    margin-bottom: -2rem;
+}
+.footer-text a {
+    font-weight: 500;
+    color: #4f46e5;
+    margin-left: 0.25rem;
+    text-decoration: none;
+}
+.footer-text a:hover {
+    color: #4338ca;
+    text-decoration: underline;
+}
