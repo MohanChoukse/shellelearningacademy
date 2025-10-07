@@ -12,6 +12,7 @@ import { AuthModal } from "./components/AuthModal";
 import { Toaster } from "./components/ui/sonner";
 import VolunteerRegistrationForm from "./components/VolunteerRegistrationForm";
 import OrganizationRegistrationForm from "./components/OrganizationRegistrationForm";
+import ResetPassword from "./components/ResetPassword";
 
 export default function AppContent() {
   const [modalState, setModalState] = useState({
@@ -55,6 +56,8 @@ export default function AppContent() {
         />
 
         <Route path="/volunteer" element={<VolunteerRegistrationForm />} />
+
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
 
       <AuthModal

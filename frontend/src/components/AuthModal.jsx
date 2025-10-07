@@ -118,10 +118,20 @@ export function AuthModal({ isOpen, onClose, type, userType }) {
     // Handle Google OAuth here
   };
 
-  const handleForgotPassword = (e) => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
-    console.log('Forgot password submitted for:', formData.email);
-    setCurrentStep('userTypeSelection');
+    try {
+      const email = (formData.email || '').trim().toLowerCase();
+      if (!email) {
+        return toast.error('Please enter your email');
+      }
+      await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      toast.success('Reset link sent to your email');
+      setCurrentStep('userTypeSelection');
+    } catch (error) {
+      const msg = error?.response?.data?.message || 'Failed to send reset link';
+      toast.error(msg);
+    }
   };
 
   const handleChange = (e) => {

@@ -1,6 +1,8 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 import User from "../models/User.js";
 
 const router = express.Router();
@@ -53,7 +55,8 @@ router.post("/register", async (req, res) => {
       skills: userType === "volunteer" ? skills : undefined,
     });
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
+
 
     res.status(201).json({
       message: "User registered successfully ✅",
@@ -98,7 +101,8 @@ router.post("/login", async (req, res) => {
       if (looksPlaintext && password === user.password) {
         const hashed = await bcrypt.hash(password, 10);
         user.password = hashed;
-        await user.save();
+        await user.save({ validateBeforeSave: false });
+
         isMatch = true;
       }
     }
@@ -125,6 +129,76 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+/**
+ * Forgot Password - send reset link
+ */
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const emailRaw = req.body?.email;
+    const email = typeof emailRaw === "string" ? emailRaw.trim().toLowerCase() : "";
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(200).json({ message: "If the email exists, a reset link has been sent" });
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = new Date(Date.now() + 1000 * 60 * 15); // 15 minutes
+    await user.save({ validateBeforeSave: false });
+
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const resetUrl = `${process.env.FRONTEND_BASE_URL || "http://localhost:5173"}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+    const mailOptions = {
+      from: `SkillBridge <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Reset your SkillBridge password",
+      html: `<p>Click the link below to reset your password. This link expires in 15 minutes.</p>
+             <p><a href="${resetUrl}">${resetUrl}</a></p>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.status(200).json({ message: "Password reset link sent" });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+/**
+ * Reset Password - verify token and set new password
+ */
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { email: rawEmail, token, password: newPassword } = req.body || {};
+    const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
+    if (!email || !token || !newPassword) {
+      return res.status(400).json({ message: "Email, token and new password are required" });
+    }
+
+    const user = await User.findOne({ email, resetPasswordToken: token, resetPasswordExpires: { $gt: new Date() } });
+    if (!user) return res.status(400).json({ message: "Invalid or expired reset token" });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json({ message: "Password has been reset successfully" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

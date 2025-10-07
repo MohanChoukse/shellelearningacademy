@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema(
 
  
     skills: { type: String },
+
+    // Password reset
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
   },
   { timestamps: true }
 );

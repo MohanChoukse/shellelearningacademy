@@ -25,6 +25,16 @@ export function Navigation({ onOpenModal }) {
     return () => window.removeEventListener("sb_auth_change", handler);
   }, []);
 
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("sb_token");
+      localStorage.removeItem("sb_user");
+      window.dispatchEvent(new Event("sb_auth_change"));
+    } catch {}
+    // Optional redirect to home
+    window.location.href = "/";
+  };
+
   // Optionally, you can add scroll effect for navbar background
   // useEffect(() => {
   //   const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -65,11 +75,19 @@ export function Navigation({ onOpenModal }) {
             ))}
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             {user ? (
-              <div className="px-4 py-2 rounded-full bg-green-100 text-green-700 border-2 border-green-200">
-                {`Welcome, ${user.fullName || user.username}`}
-              </div>
+              <>
+                <div className="px-4 py-2 rounded-full bg-green-100 text-green-700 border-2 border-green-200">
+                  {`Welcome, ${user.fullName || user.username}`}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-6 py-2 rounded-full bg-red-600 text-white border-2 border-red-500 transition-all duration-300 hover:-translate-y-0.5 hover:bg-red-700 hover:border-red-600 cursor-pointer"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <>
                 <button
