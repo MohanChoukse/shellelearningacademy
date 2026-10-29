@@ -6,7 +6,7 @@ import nodemailer from "nodemailer";
 import User from "../models/User.js";
 
 const router = express.Router();
-
+ 
 
 router.post("/register", async (req, res) => {
   try {
